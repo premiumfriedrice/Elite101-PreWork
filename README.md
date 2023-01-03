@@ -1,56 +1,14 @@
 # Elite101-PreWork
 
-import re
-#use dictionary in the future, but can't right now because I want the responses to be able to be used for other input conditions
-responses = ['Good Bye.\n', 
-             'I\'m sorry. I can\'t help you with that.\n',
-             'Okay. Go ahead.\n',
-             'We sell our signature Premium Fried Rice and other plates I recommend are the Dragon Fried Rice and the Omurice.\n',
-             'Please email our customer service department through lloydsfriedriceemporium@gmail.com for further assistance or call 800-588-2300.\n',
-             'We have locations in Round Rock, Pflugerville, Austin, and Georgetown.\n',
-             'Our store hours are 8am-9pm everyday.\n'
-            ]
+The chatbot is a simple chatbot that indentifies a keyword, and matches a response that I set it to. 
 
-def match_message(input): #function that interprets input
+The theme of the chatbot is to be a virtual assistant of my fictional fried rice emporium.
 
-  if 'no' in input:
-    print('Bot: {}'.format(responses[0]))#.format() is used for easier insertion
-    isGood = False #breaks loop
-  elif 'yes' in input:
-    print('Bot: {}'.format(responses[2]))
-    receiving_response()#reiterates input function
-  elif 'menu' in input:
-    print('Bot: {}'.format(responses[3]))
-    receiving_response()
-  elif 'refund' in input:
-    print('Bot: {}'.format(responses[4]))
-    receiving_response()
-  elif 'location' in input:
-    print('Bot: {}'.format(responses[5]))
-    receiving_response()
-  elif 'time' in input:
-    print('Bot: {}'.format(responses[6]))
-    receiving_response()
-  else:
-    print('Bot: {}'.format(responses[1]))
-    receiving_response()
+The code first greets you, and then asks how it can help and presents an input which belongs to the receiving_response() function.
+When you input, the input first passes through the get_response() function where it is processed for easier use. The code utilises the functions of regex. The re.split function which I set to split the input at every iteration of a blank space, and then passes through the re.sub function which eliminates any punctuation.
 
-def get_response(user_input): #function that receives user input 
-  split_input = re.split(r"\s+", user_input.lower()) #processes user_input and splits into list by every iteration of space
-  processed_input = [re.sub(r'[^\w\s]', '', item) for item in split_input] #processes each item in split_input and removes non-alphanumeric characters
+After the code is finished processing, it is set as a parameter of match_message() where it is decided how the chatbot should respond to the input. The match_message() function scans the input list for any keywords, and if found, a set of coditional statements are used to match the response to the keyword. The responses are sourced from a list of responses that I have typed, and are then matched to the keyword that was indentified. 
 
-  return match_message(processed_input)#inserts split, alphanumeric input as parameter for match_message
+The program runs continuously until the user decides to quit by inputing "no". 
 
-def receiving_response():
-  get_response(input('You: '))
-
-def greeting():
-  print("Bot: Hi I am the chatbot for Lloyd's Fried Rice Emporium. How may I assist you today?\n")
-
-def main():
-  greeting()
-  receiving_response()
-
-if __name__ == '__main__':
-  main()
 
