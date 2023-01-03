@@ -12,3 +12,5 @@ After the code is finished processing, it is set as a parameter of match_message
 The program runs continuously until the user decides to quit by inputing "no". 
 
 
+here are the sources I used to create this chatbot.
+https://docs.google.com/document/d/19SNXkOv7qeXkeEC8hsTcsIxoxYdmCM5ykaRLbKB5yt0/edit?usp=sharing
