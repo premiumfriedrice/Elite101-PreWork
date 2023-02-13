@@ -1,91 +1,77 @@
 import re
+import random
+import string
+import order
+import responses
+
 
 isGood = True
-#use dictionary in the future, but can't right now because I want the responses to be able to be used for other input conditions
-responses = ['Good Bye.\n', 
-             'I\'m sorry. I can\'t help you with that.\n',
-             'Okay. Go ahead.\n',
-             'Special Fried Rice \nOmurice \nDragon Fried Rice\n',
-             'Please email our customer service department through lloydsfriedriceemporium@gmail.com for further assistance or call 800-588-2300.\n',
-             'We have locations in Round Rock, Pflugerville, Austin, and Georgetown.\n',
-             'Our store hours are 8am-9pm everyday.\n',
-             'What would you like to order?\n',
-             'Have a good one!',
-             'Hello',
-             'I am good.'
-            ]
 
-order_choices = ['special fried rice', 
-                 'omurice', 
-                 'dragon fried rice']
-
-pending_orders = []
-
-def order(): #orders food for customer
-  choice = input('You: ').lower()
-  if choice == order_choices[0]:
-    pending_orders.append([order_choices[0]])
-    print('You have ordered: ', order_choices[0])
-    receiving_response()
-  elif choice == order_choices[1]:
-    pending_orders.append([order_choices[1]])
-    print('You have ordered: ', order_choices[1])
-    receiving_response()
-  elif choice == order_choices[2]:
-    pending_orders.append([order_choices[2]])
-    print('You have ordered: ', order_choices[2])
-    receiving_response()
-  else: 
-    print('Sorry. That is not on the menu.\n')
-    receiving_response()
-
-    
-def match_message(input): #function that interprets input
-  if 'no' in input:
-    print('Bot: {}'.format(responses[0]))#.format() is used for easier insertion
-    isGood = False #breaks loop
-  elif 'yes' in input:
-    print('Bot: {}'.format(responses[2]))
-    receiving_response()#reiterates input function
-  elif 'menu' in input:
-    print('Menu: \n{} \n{}'.format(responses[3], responses[7]))
-    order()
-  elif 'refund' in input:
-    print('Bot: {}'.format(responses[4]))
-    receiving_response()
-  elif 'locations' in input:
-    print('Bot: {}'.format(responses[5]))
-    receiving_response()
-  elif 'time' in input:
-    print('Bot: {}'.format(responses[6]))
-    receiving_response()
-  elif 'order' in input:
-    print('Bot: {}'.format(responses[7]))
-    order()
-  elif 'okay' in input:
-    print('Bot: {}'.format(responses[8]))
-    receiving_response()
-  elif 'hello' in input:
-    print('Bot: {}'.format(responses[9]))
-    receiving_response()
-  elif 'how are you' in input:
-    print('Bot: {}'.format(responses[10]))
-    receiving_response()
-  else:
-    print('Bot: {}'.format(responses[1]))
-    receiving_response()
-    
-def get_response(user_input): #function that receives user input 
-  split_input = re.split(r"\s+", user_input.lower()) #processes user_input and splits into list by every iteration of space
-  processed_input = [re.sub(r'[^\w\s]', '', item) for item in split_input] #processes each item in split_input and removes non-alphanumeric characters
+def make_order():
+  global isGood
+  items_list = [] #can hold multiple orders
+  food_sel_list = [] #list for input before added to order items list
   
-  return match_message(processed_input)#inserts split, alphanumeric input as parameter for match_message
+  order_price = 0.0
+  
+  order.display_menu()
+  food_sel_list.append(input("\nWhat would you like to order?: ").lower())
+  
+  while isGood:
+    food_sel_list.append(input("\nAnything else? type no to proceed: ").lower()) 
+    for word in food_sel_list:
+      if word == "no":
+        isGood = False
+      else:
+        continue
+  
+  for item in range(len(order.menu)): #loops through each item in menu
+    for food_sel in food_sel_list:
+      if food_sel == order.menu[item]["Name"]:
+        items_list.append(order.menu[item]["Name"])
+        ordered_item = food_sel 
+        for order_choice in items_list: #each order gets price added total
+          if ordered_item == order.menu[item].setdefault("Name"):
+              order_price += order.menu[item].setdefault("Price")
+          else:
+              print("Sorry. That is not on the menu.")
+      elif food_sel == "no":
+        isGood = False
+          
+  if len(items_list) > 0:
+    checkout_choice = input("\nWould you like to proceed to checkout? please enter yes or no: ").lower()
+    if checkout_choice == "yes":
+      order.checkout(items_list, order_price)
+      if checkout_choice == "no":
+        pass
 
+def match_message(input): #function that interprets input
+  global isGood
+  for phrase in responses.responses:
+    resp_match = re.search(phrase, input)#searches responses dict keywords for a match with a word in input 
+    if resp_match:
+      print("Bot: {}".format(random.choice(responses.responses.get(phrase))))
+    else:
+      pass
+  ord = re.search("order", input)
+  if ord:
+    make_order()
+  end = re.search("bye", input)
+  if end:
+    isGood = False
+
+    
 def receiving_response():
-  get_response(input('You: '))
+  global isGood
+  while isGood:
+    user_res = input('\nYou: ').lower()
+    unpunct_user_res = user_res.translate(str.maketrans('', '', string.punctuation))
+    match_message(unpunct_user_res)
+
 
 def greeting():
-  print("Bot: Hi I am the chatbot for Lloyd's Fried Rice Emporium. How may I assist you today?\n")
+  print("Bot: Hi I am the chatbot for Lloyd's Fried Rice Emporium. How may I assist you today?")
+
 
 def main():
   greeting()
@@ -93,4 +79,3 @@ def main():
 
 if __name__ == '__main__':
   main()
-  
