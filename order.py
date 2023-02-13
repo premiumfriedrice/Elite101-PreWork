@@ -4,6 +4,7 @@ isGood = True
 
 ordered = [
 ]
+branch = ["Round Rock", "Pflugerville", "Austin", "Georgetown"]
 menu = [
   {"Name":"special fried rice", "Price":13.99, "MenuIndex":1},
   {"Name":"dragon fried rice", "Price":10.99, "MenuIndex":2},
@@ -39,8 +40,6 @@ def address():
     zip = 00000
   
   given_address = "{0} {1} {2}, {3} {4}".format(building_num, street, city, state, zip)
-
-  print(given_address)
   
   return given_address
 
@@ -82,7 +81,9 @@ def display_menu():
   
 
 def checkout(req_items, n_price): #prints receipt and lets customer know about order progress
-  
+
+  print("\n**CHECKOUT**")
+  print("--------------------")
   branch = "Round Rock"
 
   delivery_address = address()
@@ -90,23 +91,25 @@ def checkout(req_items, n_price): #prints receipt and lets customer know about o
   order_num = random.randint(1, 1000)
 
   status = "In Progress"
+  print("--------------------")
     
   if status == "In Progress":
     new_order = Order(order_num, status, req_items, n_price, delivery_address, branch) #new Order object
+    print("\n**ORDER PLACED**")
     ordered.append(new_order.details())
     for order in ordered: #prints receipt
-      print('\n--------------------')
+      print('--------------------')
       for key, value in order.items():
         print('{0}\t\t{1}'.format(key, value))
     print('--------------------')
 
   
 class Order:
-  def __init__(self, order_num, status, items, price, delivery_address, branch):
+  def __init__(self, order_num, status, items, total, delivery_address, branch):
     self.order_num = random.randint(1, 1000)
     self.status = str(status)
     self.items = str(items)
-    self.price = float(price)
+    self.total = float(total)
     self.delivery_address = delivery_address
     self.branch = str(branch)
 
@@ -115,7 +118,7 @@ class Order:
       "OrderID":self.order_num,
       "Status":self.status,
       "Items":self.items,
-      "Price":self.price,
+      "Total":self.total,
       "Address":self.delivery_address,
-      "Branch":self.branch
+      "Branch":random.choice(branch)
            }

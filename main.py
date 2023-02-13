@@ -4,17 +4,18 @@ import string
 import order
 import responses
 
-
 isGood = True
 
 def make_order():
   global isGood
   items_list = [] #can hold multiple orders
+  
   food_sel_list = [] #list for input before added to order items list
   
   order_price = 0.0
   
   order.display_menu()
+  
   food_sel_list.append(input("\nWhat would you like to order?: ").lower())
   
   while isGood:
@@ -29,21 +30,15 @@ def make_order():
     for food_sel in food_sel_list:
       if food_sel == order.menu[item]["Name"]:
         items_list.append(order.menu[item]["Name"])
-        ordered_item = food_sel 
         for order_choice in items_list: #each order gets price added total
-          if ordered_item == order.menu[item].setdefault("Name"):
+          if order_choice == order.menu[item].setdefault("Name"):
               order_price += order.menu[item].setdefault("Price")
-          else:
-              print("Sorry. That is not on the menu.")
       elif food_sel == "no":
         isGood = False
           
   if len(items_list) > 0:
-    checkout_choice = input("\nWould you like to proceed to checkout? please enter yes or no: ").lower()
-    if checkout_choice == "yes":
       order.checkout(items_list, order_price)
-      if checkout_choice == "no":
-        pass
+      
 
 def match_message(input): #function that interprets input
   global isGood
@@ -53,7 +48,7 @@ def match_message(input): #function that interprets input
       print("Bot: {}".format(random.choice(responses.responses.get(phrase))))
     else:
       pass
-  ord = re.search("order", input)
+  ord = re.search("order", input)#if input has the word order, call make_order()
   if ord:
     make_order()
   end = re.search("bye", input)
@@ -76,6 +71,7 @@ def greeting():
 def main():
   greeting()
   receiving_response()
+
 
 if __name__ == '__main__':
   main()
